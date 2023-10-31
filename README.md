@@ -1,13 +1,14 @@
-# Sample Hardhat Project
+K社Businessモデル検証用Demo Repository
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+Goal
+- Reach 1K TPS on peak transaction throughput during batch minting of NFT.
 
-Try running some of the following tasks:
+Method
+- We have written a simple NFT contract with two properties: index and a random number.
+- We then use hardhat script to simulate a single client with negligible geographic and networking overhead to repeatedly send the same transaction over and over to the sequencer.
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
-```
+Outcome
+- Hardhat Runtime Environment: 120~140TPS
+- Arbitrum Nitro Geth Node: 260~280TPS
+- Arbitrum Stylus w/ Rust Code: TBD
+- Arbitrum Stylus w/ Rust Code and Orbit: TBD
