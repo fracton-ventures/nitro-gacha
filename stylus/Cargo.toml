@@ -1,0 +1,33 @@
+[package]
+name = "stylus"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "my_contract"
+path = "src/main.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+alloy-primitives = "0.3.1"
+alloy-sol-types = "0.3.1"
+hex = "0.4.3"
+stylus-sdk = "0.4.1"
+wee_alloc = "0.4.5"
+
+[dev-dependencies]
+# ethers = "2.0"
+eyre = "0.6.8"
+ethers = "2.0"
+
+[features]
+export-abi = ["stylus-sdk/export-abi"]
+
+[profile.release]
+codegen-units = 1
+strip = true
+lto = true
+panic = "abort"
+opt-level = "s"
+
+[workspace]
