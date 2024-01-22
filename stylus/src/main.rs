@@ -33,7 +33,6 @@ extern crate alloc;
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 mod erc721;
-mod safemint;
 
 use crate::erc721::{ERC721Params, ERC721};
 use alloc::{format, string::String, vec::Vec};
@@ -78,14 +77,6 @@ impl MyToken {
             .mint(msg::sender(), self.token_id.clone().into())?;
         token_id = token_id + U256::from(1);
         self.token_id.set(token_id);
-
-        // // how do I emit an event?
-        // evm::log(Transfer {
-        //     from: Address,
-        //     to: Address,
-        //     token_id,
-        // });
-
         Ok(())
     }
 
@@ -98,8 +89,8 @@ impl MyToken {
         Ok(())
     }
 
-    pub fn get_random_value(&self) -> Result<U256, Vec<u8>> {
-        let random_value = self.random_values.get(self.token_id.get());
+    pub fn get_random_value(&self, token_id: U256) -> Result<U256, Vec<u8>> {
+        let random_value = self.random_values.get(token_id);
         Ok(U256::from(random_value))
     }
 }
