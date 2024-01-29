@@ -9,6 +9,11 @@ typechain-types
 cache
 artifacts
 
+# forge files
+lib/forge-std
+out
+build
+
 target
 .cargo
 pkey

@@ -80,6 +80,13 @@ impl MyToken {
         Ok(())
     }
 
+    pub fn get_random_value(&self, token_id: U256) -> Result<U256, Vec<u8>> {
+        let random_value = self.random_values.get(token_id);
+        Ok(U256::from(random_value))
+    }
+}
+
+impl MyToken {
     pub fn set_random_value(&mut self) -> Result<(), Vec<u8>> {
         let data = format!("{}{}{}", self.token_id.get(), timestamp(), msg::sender());
         let random_value = keccak256(data);
@@ -87,10 +94,5 @@ impl MyToken {
             .setter(self.token_id.get())
             .set(random_value.into());
         Ok(())
-    }
-
-    pub fn get_random_value(&self, token_id: U256) -> Result<U256, Vec<u8>> {
-        let random_value = self.random_values.get(token_id);
-        Ok(U256::from(random_value))
     }
 }

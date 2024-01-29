@@ -4,7 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [[bin]]
-name = "safemint"
+name = "safemint-solidity"
+
+[[bin]]
+name = "safemint-stylus"
 
 [lib]
 name = "my_contract"
@@ -18,7 +21,7 @@ hex = "0.4.3"
 stylus-sdk = "0.4.1"
 wee_alloc = "0.4.5"
 tokio = { version = "1.32.0", features = ["full"] }  # 'full' feature enables all the available features.
-ethers = "2.0"
+ethers = {version = "2.0", features = ["solc"]}
 eyre = "0.6.8"
 
 [features]
