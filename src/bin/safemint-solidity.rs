@@ -19,6 +19,15 @@ use std::{path::PathBuf, sync::Arc};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Number of times to mint the NFT
+    const NUM_TOKENS: u64 = 100;
+
+    // Using Nitro Default Endpoint and Prefunded Wallet
+    const RPC_ENDPOINT: &str = "http://localhost:8547";
+    const PRIVATE_KEY: &str = "0xb6b15c8cb491557369f3c7d2c287b053eb229daa9c22138887752191c9520659";
+    const OWNER_ADDRESS: &str = "0x3f1Eae7D46d88F08fc2F8ed27FCb2AB183EB2d0E";
+    let mut count: u128 = 0;
+
     abigen!(
         MyToken,
         r#"[
@@ -26,21 +35,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         ]"#
     );
 
-    // Number of times to mint the NFT
-    const NUM_TOKENS: u64 = 10;
-    let mut count: u128 = 0;
-
     // Set up the provider and wallet client
-    let provider = Provider::<Http>::try_from("http://localhost:8545")?;
-    let wallet = LocalWallet::from_str(
-        &"0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
-    )?;
+    let provider = Provider::<Http>::try_from(RPC_ENDPOINT)?;
+    let wallet = LocalWallet::from_str(&PRIVATE_KEY)?;
     let chain_id = provider.get_chainid().await?.as_u64();
     let client = SignerMiddleware::new(provider, wallet.clone().with_chain_id(chain_id));
     let client = Arc::new(client);
 
     // Set up the constructor arguments
-    let owner_address: Address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266".parse()?;
+    let owner_address: Address = OWNER_ADDRESS.parse()?;
 
     // Get the directory for the solidity contract
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));

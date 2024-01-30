@@ -16,32 +16,36 @@ use std::time::Instant;
 
 #[tokio::main]
 async fn main() -> eyre::Result<()> {
+    // Number of times to mint the NFT
+    const NUM_TOKENS: u64 = 100;
+
+    // Using Nitro Default Endpoint and Prefunded Wallet
+    const RPC_ENDPOINT: &str = "http://localhost:8547";
+    const PRIVATE_KEY: &str = "0xb6b15c8cb491557369f3c7d2c287b053eb229daa9c22138887752191c9520659";
+    const OWNER_ADDRESS: &str = "0x3f1Eae7D46d88F08fc2F8ed27FCb2AB183EB2d0E";
+    let mut count: u128 = 0;
+
     abigen!(
         MyToken,
         r#"[
             function mint() external
-            function setRandomValue() external
-            function getRandomValue(uint256 token_id) external view returns (uint256)
         ]"#
     );
 
-    let provider = Provider::<Http>::try_from("http://localhost:8545")?;
-    let address: Address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266".parse()?;
-
-    let wallet = LocalWallet::from_str(
-        &"0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
-    )?;
+    // Using Nitro Default Endpoint and Prefunded Wallet
+    let provider = Provider::<Http>::try_from(RPC_ENDPOINT)?;
+    let owner_address: Address = OWNER_ADDRESS.parse()?;
+    let wallet = LocalWallet::from_str(&PRIVATE_KEY)?;
     let chain_id = provider.get_chainid().await?.as_u64();
     let client = SignerMiddleware::new(provider, wallet.clone().with_chain_id(chain_id));
     let client = Arc::new(client);
 
     let start_time = Instant::now();
-    let mut count: u128 = 0;
-    let my_token = MyToken::new(address, client);
+    let my_token = MyToken::new(owner_address, client);
 
-    for _ in 0..1000 {
-        my_token.mint().send().await?;
+    for _ in 0..NUM_TOKENS {
         count += 1;
+        my_token.mint().send().await?;
         println!("Successfully minted token number: {}", count);
     }
 
